@@ -27,6 +27,7 @@ project
 │
 ├─load_modules.sh               Shell script for fast loading Flex and Bison
 ├─make.sh                       Shell script for easily building the translator
+├─run_example.sh                Shell script for easily running examples
 │
 ...
 ```

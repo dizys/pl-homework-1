@@ -11,6 +11,7 @@ int yylex(); // A function that is to be generated and provided by flex,
 int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 
 using namespace asttree;
+using namespace std;
 %}
 
 %union {
@@ -31,6 +32,7 @@ using namespace asttree;
 prog:
         SECTION statements SECTION {
             $$ = new prog($1,$2,$3);
+            $$->doConversion();
         }
     ;
 

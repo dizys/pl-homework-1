@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <set>
+#include <vector>
 
 using namespace std;
 
@@ -13,32 +15,17 @@ using namespace std;
 
 namespace asttree {
   class treenode;
-  class expr;
-  class statement;
-  class statements;
-  class rest;
-  class terminal;
-  class quant;
   class prog;
+  class statements;
+  class statement;
+  class epsilon_trans_expr;
   class empty;
-  class BNFConverter;
-  class treenode;
-
-  /************************************************************
-  class  BNFConverter
-
-  Contains the rules for converting an EBNF grammar to BNF.
-
-  *************************************************************/
-
-  class BNFConverter {
-  public:
-    static treenode* statementNode;
-    static void doGrouping(expr* target, treenode* rhs);
-    static void doZeroOrOne(expr* target, treenode* rhs);
-    static void doZeroOrMore(expr* target, treenode* rhs);
-    static void doOneOrMore(expr* target, treenode* rhs);
-  };
+  class expr;
+  class subexpr;
+  class quant;
+  class base;
+  class term_and_nonterms;
+  class terminal;
 
   /*************************************************************
   class  treenode
@@ -52,12 +39,17 @@ namespace asttree {
   *************************************************************/
 
   class treenode {
-    int childNumber;
     treenode* children[MAX_CHILD];
     treenode* parent;
   protected:
     int numChildren=0;
   public:
+    static set<string>* termAndNontermSet;
+    static vector<string>* extraProductionVector;
+    static string getNewUnTakenNonterm(const string& prefix);
+    string parentRewrite;
+    string termOrNonterm = "";
+
     treenode() : numChildren(0), parent(NULL) {
       children[0] = NULL;
     }
@@ -86,6 +78,9 @@ namespace asttree {
     }
 
     void setParent(treenode* p) {
+      if (!(p->parentRewrite).empty()) {
+        parentRewrite = p->parentRewrite;
+      }
       parent = p;
     }
 
@@ -132,11 +127,28 @@ namespace asttree {
       }
     }
 
-    virtual void doConversion() {
+    virtual void beforeConversion() {
       for (int i=0; i < numChildren; i++) {
         if (children[i] != NULL) {
           children[i]->setParent(this);
+        }
+      }
+    }
+
+    virtual void doConversion() {
+      beforeConversion();
+      for (int i=0; i < numChildren; i++) {
+        if (children[i] != NULL) {
           children[i]->doConversion();
+        }
+      }
+      afterConversion();
+    }
+
+    virtual void afterConversion() {
+      for (int i=0; i < numChildren; i++) {
+        if (children[i] != NULL) {
+          // vector<string> childProductions = children[i]->
         }
       }
     }
@@ -160,7 +172,7 @@ namespace asttree {
 
   class statement : public treenode {
   public:
-    statement(treenode* t1, treenode* t2, treenode* ete, treenode* t3) : treenode(t1, t2, ete, t3) {}
+    statement(treenode* t1, treenode* t2, treenode* ete, treenode* t3);
 
     virtual void print(ostream& o) const {
       treenode::print(o);
@@ -172,6 +184,9 @@ namespace asttree {
   public:
     epsilon_trans_expr(treenode* t1, treenode* t2, treenode* e) : treenode(t1, t2, e) {}
     epsilon_trans_expr(treenode* e) : treenode(e) {}
+  };
+
+  class empty : public treenode {
   };
 
   class expr : public treenode {
@@ -191,18 +206,21 @@ namespace asttree {
     quant(treenode* b) : treenode(b) {}
     quant(treenode* b, treenode* t) : treenode(b, t) {}
     quant(treenode* t1, treenode* b, treenode* t2) : treenode(t1, b, t2) {}
+    void doConversion();
   };
 
   class base : public treenode {
   public:
     base(treenode* t1, treenode* se, treenode* t2) : treenode(t1, se, t2) {}
     base(treenode* tn) : treenode(tn) {}
+    void doConversion();
   };
 
   class term_and_nonterms : public treenode {
   public:
-    term_and_nonterms(treenode* t) : treenode(t) {}
-    term_and_nonterms(treenode* t, treenode* tn) : treenode(t, tn) {}
+    term_and_nonterms(treenode* t);
+    term_and_nonterms(treenode* t, treenode* tn);
+    void doConversion();
   };
 
   class terminal : public treenode {
@@ -221,9 +239,6 @@ namespace asttree {
     virtual void print(ostream& o) const {
       o << s << " ";
     }
-  };
-
-  class empty : public treenode {
   };
 }
 
