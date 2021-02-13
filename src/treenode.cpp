@@ -11,7 +11,7 @@ using namespace std;
 
 namespace asttree {
   set<string>* treenode::termAndNontermSet = new set<string>();
-  vector<string>* treenode::extraProductionVector = new vector<string>();
+  // vector<string>* treenode::extraProductionVector = new vector<string>();
 
   string treenode::getNewUnTakenNonterm(const string& prefix) {
     if (treenode::termAndNontermSet->find(prefix) == treenode::termAndNontermSet->end()) {
@@ -52,13 +52,13 @@ namespace asttree {
         string subProductionName = treenode::getNewUnTakenNonterm(productionName + "_sub");
         string productionRule = bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
         string subProductionRule = bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
-        treenode::extraProductionVector->insert(productionName + NAME_RULE_SPLITTER + productionRule);
-        treenode::extraProductionVector->insert(subProductionName + NAME_RULE_SPLITTER + subProductionRule);
+        // treenode::extraProductionVector->insert(productionName + NAME_RULE_SPLITTER + productionRule);
+        // treenode::extraProductionVector->insert(subProductionName + NAME_RULE_SPLITTER + subProductionRule);
         termOrNonterm = productionName;
       } else if (t2_node->value() == "*") {
         string productionName = treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
         string productionRule = EPSILON_TRANS + RULE_OR_SPLITTER + bs_name + " " + productionName;
-        treenode::extraProductionVector->insert(productionName + NAME_RULE_SPLITTER + productionRule);
+        // treenode::extraProductionVector->insert(productionName + NAME_RULE_SPLITTER + productionRule);
       }
     }
   }
@@ -74,7 +74,7 @@ namespace asttree {
       se_node->setParent(this);
       se_node->doConversion();
       string productionName = treenode::getNewUnTakenNonterm(parentRewrite + "_base");
-      treenode::extraProductionVector->insert(productionName + " : " + se_node->termOrNonterm);
+      // treenode::extraProductionVector->insert(productionName + " : " + se_node->termOrNonterm);
       termOrNonterm = productionName;
     }
   }

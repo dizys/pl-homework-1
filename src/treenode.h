@@ -45,7 +45,7 @@ namespace asttree {
     int numChildren=0;
   public:
     static set<string>* termAndNontermSet;
-    static vector<string>* extraProductionVector;
+    // static vector<string>* extraProductionVector;
     static string getNewUnTakenNonterm(const string& prefix);
     string parentRewrite;
     string termOrNonterm = "";
