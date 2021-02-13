@@ -12,7 +12,6 @@ using namespace std;
 #define EMPTY_VAL " /* empty */"
 
 namespace asttree {
-
   class treenode;
   class expr;
   class statement;
@@ -150,12 +149,18 @@ namespace asttree {
 
   class prog : public treenode {
   public:
-    prog(treenode* t1, treenode* s, treenode* t2) : treenode(t1,s,t2) {}
+    prog(treenode* t1, treenode* ss, treenode* t2) : treenode(t1, ss, t2) {}
+  };
+
+  class statements: public treenode {
+  public:
+    statements(treenode* s) : treenode(s) {}
+    statements(treenode* s, treenode* ss) : treenode(s, ss) {}
   };
 
   class statement : public treenode {
   public:
-    statement(treenode* t1, treenode* t2, treenode* e, treenode* r) : treenode(t1,t2,e,r) {}
+    statement(treenode* t1, treenode* t2, treenode* ete, treenode* t3) : treenode(t1, t2, ete, t3) {}
 
     virtual void print(ostream& o) const {
       treenode::print(o);
@@ -163,14 +168,45 @@ namespace asttree {
     }
   };
 
-  class statements: public treenode {
+  class epsilon_trans_expr : public treenode {
   public:
-    statements(treenode* s) : treenode(s) {}
-    statements(treenode* s1, treenode* s2) : treenode(s1,s2) {}
+    epsilon_trans_expr(treenode* t1, treenode* t2, treenode* e) : treenode(t1, t2, e) {}
+    epsilon_trans_expr(treenode* e) : treenode(e) {}
+  };
+
+  class expr : public treenode {
+  public:
+    expr(treenode* se) : treenode(se) {}
+    expr(treenode* se, treenode* t, treenode* e) : treenode(se, t, e) {}
+  };
+
+  class subexpr : public treenode {
+  public:
+    subexpr(treenode* q) : treenode(q) {}
+    subexpr(treenode* q, treenode* t, treenode* se) : treenode(q, t, se) {}
+  };
+
+  class quant : public treenode {
+  public:
+    quant(treenode* b) : treenode(b) {}
+    quant(treenode* b, treenode* t) : treenode(b, t) {}
+    quant(treenode* t1, treenode* b, treenode* t2) : treenode(t1, b, t2) {}
+  };
+
+  class base : public treenode {
+  public:
+    base(treenode* t1, treenode* se, treenode* t2) : treenode(t1, se, t2) {}
+    base(treenode* tn) : treenode(tn) {}
+  };
+
+  class term_and_nonterms : public treenode {
+  public:
+    term_and_nonterms(treenode* t) : treenode(t) {}
+    term_and_nonterms(treenode* t, treenode* tn) : treenode(t, tn) {}
   };
 
   class terminal : public treenode {
-    string s;
+  string s;
   public:
     terminal(string v) : s(v) {}
 
@@ -186,8 +222,6 @@ namespace asttree {
       o << s << " ";
     }
   };
-
-  /* Fill in the rest of the class implementations here */
 
   class empty : public treenode {
   };

@@ -24,7 +24,7 @@ if [ -d "$dist_dir" ] ; then
     echo "Cleaning previous build artifacts..."
     rm -rf "$dist_dir"
     echo " - Finished."
-    echo -e "\n"
+    echo ""
 fi
 
 
@@ -41,12 +41,12 @@ fi
 echo "Bison: generating parser c source file..."
 bison -d "$source_dir/trans.y" -o "$dist_c_source_dir/trans.tab.c"
 echo " - Success. Tokenizor source at: $dist_c_source_dir/trans.tab.c"
-echo -e "\n"
+echo ""
 
 echo "Flex: generating tokenizer c source file..."
 flex -o"$dist_c_source_dir/trans.yy.c" "$source_dir/trans.l"
 echo " - Success. Parser source at: $dist_c_source_dir/trans.yy.c"
-echo -e "\n"
+echo ""
 
 echo "g++: compiling translator..."
 g++ \
@@ -57,6 +57,6 @@ g++ \
     "$dist_c_source_dir/trans.tab.c" \
     "$source_dir/treenode.cpp"
 echo " - Success. Executable binary at: $dist_binary_dir/trans"
-echo -e "\n"
+echo ""
 
 echo "Build task finished."

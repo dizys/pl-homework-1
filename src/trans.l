@@ -12,20 +12,20 @@ using namespace asttree;
 using namespace std;
 
 /* section variable refers to:
-   1 = definitions
-   2 = rules
-   3 = user code
+  1 = definitions
+  2 = rules
+  3 = user code
 
-   I recommend that you echo everything in sections 1 and 3 to the standard output
-   and only return tokens for section 2, since the parser will be mainly concerned
-   with the rules.
+  I recommend that you echo everything in sections 1 and 3 to the standard output
+  and only return tokens for section 2, since the parser will be mainly concerned
+  with the rules.
  */
 int section=1;
 
 /* Flag gets set to 1 immediately when the rewrite symbol ':' is observed.
-   When 1, we should check for a newline.  If so, that means this is
-   an epsilon transition.  In this case we should return an epsilon token
-   rather than interpret it as a newline.
+  When 1, we should check for a newline.  If so, that means this is
+  an epsilon transition.  In this case we should return an epsilon token
+  rather than interpret it as a newline.
 */
 int flag=0;
 %}

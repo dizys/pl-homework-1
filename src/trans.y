@@ -14,7 +14,7 @@ using namespace asttree;
 %}
 
 %union {
-   treenode* val;
+    treenode* val;
 };
 
 %start prog
@@ -28,45 +28,100 @@ using namespace asttree;
 
 %%
 
-prog: SECTION statements SECTION {
-    std::cout<<"haha"<<std::endl;
-}
+prog:
+        SECTION statements SECTION {
+            $$ = new prog($1,$2,$3);
+        }
     ;
 
-statements:  statement             {  }
-    |   statement statements        {  }
+statements:
+        statement {
+            $$ = new statements($1);
+        }
+    |
+        statement statements {
+            $$ = new statements($1, $2);
+        }
     ;
 
-statement:  TERM_OR_NONTERM REWRITES epsilon_trans_expr SEMI { cout << "statement finished" << endl;  }
+statement:
+        TERM_OR_NONTERM REWRITES epsilon_trans_expr SEMI {
+            $$ = new statement($1, $2, $3, $4);
+        }
     ;
 
-epsilon_trans_expr:  ENDL RULE_OR expr { }
-    |   expr   { }
+epsilon_trans_expr:
+        ENDL RULE_OR expr {
+            $$ = new epsilon_trans_expr($1, $2, $3);
+        }
+    |
+        expr {
+            $$ = new epsilon_trans_expr($1);
+        }
     ;
 
  /* Fill in any other rules here */
 
-expr: subexpr   {  }
-    | subexpr RULE_OR expr  { }
+expr:
+        subexpr {
+            $$ = new expr($1);
+        }
+    |
+        subexpr RULE_OR expr {
+            $$ = new expr($1, $2, $3);
+        }
     ;
 
-subexpr: quant { }
-    | quant GROUP_OR subexpr { }
+subexpr:
+        quant {
+            $$ = new subexpr($1);
+        }
+    |
+        quant GROUP_OR subexpr {
+            $$ = new subexpr($1, $2, $3);
+        }
     ;
 
-quant: base  { }
-    | base REP_ONE { }
-    | base REP_ZERO { }
-    | REP_ZERO_LEFT base REP_ZERO_RIGHT { }
-    | OPTION_LEFT base OPTION_RIGHT { }
+quant:
+        base {
+            $$ =  new quant($1);
+        }
+    |
+        base REP_ONE {
+            $$ = new quant($1, $2);
+        }
+    |
+        base REP_ZERO {
+            $$ = new quant($1, $2);
+        }
+    |
+        REP_ZERO_LEFT base REP_ZERO_RIGHT {
+            $$ = new quant($1, $2, $3);
+        }
+    |
+        OPTION_LEFT base OPTION_RIGHT {
+            $$ = new quant($1, $2, $3);
+        }
     ;
 
-base: GROUPING_LEFT subexpr GROUPING_RIGHT { }
-    | term_and_nonterms { }
+base:
+        GROUPING_LEFT subexpr GROUPING_RIGHT {
+            $$ = new base($1, $2, $2);
+        }
+    |
+        term_and_nonterms {
+            $$ = new base($1);
+        }
     ;
 
-term_and_nonterms: TERM_OR_NONTERM { }
-    | TERM_OR_NONTERM term_and_nonterms { }
+term_and_nonterms:
+        TERM_OR_NONTERM {
+            $$ = new term_and_nonterms($1);
+        }
+    |
+        TERM_OR_NONTERM term_and_nonterms {
+            $$ = new term_and_nonterms($1, $2);
+        }
     ;
 
 %%
