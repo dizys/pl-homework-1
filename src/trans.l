@@ -49,7 +49,7 @@ int flag=0;
   }
 }
 
-"<"	{
+"<" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO_LEFT;
@@ -75,42 +75,42 @@ int flag=0;
   }
 }
 
-"["	{
+"[" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return OPTION_LEFT;
   }
 }
 
-"]"	{
+"]" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return OPTION_RIGHT;
   }
 }
 
-"("	{
+"(" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return GROUPING_LEFT;
   }
 }
 
-")"	{
+")" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return GROUPING_RIGHT;
   }
 }
 
-"+"	{
+"+" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ONE;
   }
 }
 
-"*"	{
+"*" {
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO;
@@ -124,14 +124,14 @@ int flag=0;
   }
 }
 
-"|"	{
+"|" {
   yylval.val = new terminal("\n  |");
   if (section==2) {
     return RULE_OR;
   }
 }
 
-":"	{
+":" {
   if (section==2) {
     flag=1; /* line empty if newline afer this */
     yylval.val = new terminal(yytext);
@@ -139,7 +139,7 @@ int flag=0;
   }
 }
 
-";"	{
+";" {
   yylval.val = new terminal("\n   ;");
   if (section==2) {
     return SEMI;
@@ -171,13 +171,13 @@ int flag=0;
 
 
  /* This is the %union directive. Also can span multiple lines. */
-"%union {"[^}]*"};"	{
+"%union {"[^}]*"};" {
   /* discard union code block */
   cout << yytext;
 }
 
  /* Code action block of the form { .... } */
-"{"[^}]*"}"	{
+"{"[^}]*"}" {
   /* discard action code block */
   if (section != 2) {
     cout << yytext;
