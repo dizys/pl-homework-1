@@ -28,7 +28,9 @@ using namespace asttree;
 
 %%
 
-prog: SECTION statements SECTION   {  std::cout<<"haha"<<std::endl; } 
+prog: SECTION statements SECTION {
+    std::cout<<"haha"<<std::endl;
+}
     ;
 
 statements:  statement             {  }

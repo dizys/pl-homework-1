@@ -50,14 +50,14 @@ int flag=0;
 }
 
 "<"	{
-  yylval.val = new terminal(yytext); 
+  yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO_LEFT;
   }
 }
 
 ">" {
-  yylval.val = new terminal(yytext); 
+  yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO_RIGHT;
   }
@@ -67,7 +67,7 @@ int flag=0;
 [a-zA-Z][a-zA-Z0-9_]*|"'"[a-zA-Z][a-zA-Z0-9_]*"'" {
   yylval.val = new terminal(yytext);
   if (section != 2) {
-    cout << yytext; 
+    cout << yytext;
   }
   flag=0; /* if we saw a terminal or non-terminal, the line cannot be empty */
   if (section == 2) {
@@ -76,7 +76,7 @@ int flag=0;
 }
 
 "["	{
-  yylval.val = new terminal(yytext);  
+  yylval.val = new terminal(yytext);
   if (section==2) {
     return OPTION_LEFT;
   }
@@ -97,7 +97,7 @@ int flag=0;
 }
 
 ")"	{
-  yylval.val = new terminal(yytext); 
+  yylval.val = new terminal(yytext);
   if (section==2) {
     return GROUPING_RIGHT;
   }
@@ -133,9 +133,9 @@ int flag=0;
 
 ":"	{
   if (section==2) {
-    flag=1; /* line empty if newline afer this */ 
-    yylval.val = new terminal(yytext); 
-    return REWRITES; 
+    flag=1; /* line empty if newline afer this */
+    yylval.val = new terminal(yytext);
+    return REWRITES;
   }
 }
 
@@ -156,17 +156,17 @@ int flag=0;
  /* Section divider */
 "%%" {
   /* section divider */
-  yylval.val = new terminal("\n%%\n"); 
-  section++; 
+  yylval.val = new terminal("\n%%\n");
+  section++;
   return SECTION;
-} 
+}
 
 
- /* Code block. %{ ...  %} 
+ /* Code block. %{ ...  %}
     Warning: possibly multiple lines!  */
 "%{"[.\n]*"%}" {
   /* discard flex code block */
-  cout << yytext; 
+  cout << yytext;
 }
 
 
@@ -190,7 +190,7 @@ int flag=0;
   }
   if (flag) {
     flag=0;
-    yylval.val = new empty(); 
+    yylval.val = new empty();
     return ENDL;
   }
 }
@@ -200,12 +200,12 @@ int flag=0;
   cout << yytext;
 }
 
-. { 
+. {
   if (section != 2) {
-    cout << yytext; 
+    cout << yytext;
   } else {
     cerr << "Invalid token: " << yytext <<  " on line " << yylineno << endl;
-    exit(1); 
+    exit(1);
   }
 }
 

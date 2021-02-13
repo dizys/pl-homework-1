@@ -33,7 +33,7 @@ namespace asttree {
   *************************************************************/
 
   class BNFConverter {
-  public: 
+  public:
     static treenode* statementNode;
     static void doGrouping(expr* target, treenode* rhs);
     static void doZeroOrOne(expr* target, treenode* rhs);
@@ -63,23 +63,23 @@ namespace asttree {
       children[0] = NULL;
     }
 
-    treenode(treenode* t1) : numChildren(1), parent(NULL) { 
+    treenode(treenode* t1) : numChildren(1), parent(NULL) {
       children[0] = t1;
     }
 
-    treenode(treenode* t1, treenode* t2) : numChildren(2), parent(NULL) { 
+    treenode(treenode* t1, treenode* t2) : numChildren(2), parent(NULL) {
       children[0] = t1;
       children[1] = t2;
     }
 
 
-    treenode(treenode* t1, treenode* t2, treenode* t3) : numChildren(3), parent(NULL) { 
+    treenode(treenode* t1, treenode* t2, treenode* t3) : numChildren(3), parent(NULL) {
       children[0] = t1;
       children[1] = t2;
       children[2] = t3;
     }
 
-    treenode(treenode* t1, treenode* t2, treenode* t3, treenode* t4) : numChildren(4), parent(NULL) { 
+    treenode(treenode* t1, treenode* t2, treenode* t3, treenode* t4) : numChildren(4), parent(NULL) {
       children[0] = t1;
       children[1] = t2;
       children[2] = t3;
@@ -119,13 +119,13 @@ namespace asttree {
       children[c]=t;
     }
 
-    virtual string value() const { 
+    virtual string value() const {
       return NULL;
     }
 
     virtual string setValue(string s) {}
 
-    virtual void print(ostream& o) const {  
+    virtual void print(ostream& o) const {
       for (int i=0; i < numChildren; i++) {
         if (children[i] != NULL) {
           children[i]->print(o);
@@ -144,7 +144,7 @@ namespace asttree {
   };
 
   /* Subclasses should be named after the left-hand-side of each
-    rule in your Bison grammar.  Some limited classes are supplied 
+    rule in your Bison grammar.  Some limited classes are supplied
     to you.
   */
 
@@ -157,8 +157,8 @@ namespace asttree {
   public:
     statement(treenode* t1, treenode* t2, treenode* e, treenode* r) : treenode(t1,t2,e,r) {}
 
-    virtual void print(ostream& o) const { 
-      treenode::print(o); 
+    virtual void print(ostream& o) const {
+      treenode::print(o);
       o << endl << endl;
     }
   };
@@ -171,10 +171,10 @@ namespace asttree {
 
   class terminal : public treenode {
     string s;
-  public: 
+  public:
     terminal(string v) : s(v) {}
 
-    virtual string setValue(string s1) { 
+    virtual string setValue(string s1) {
       s = s1;
     }
 

@@ -7,24 +7,24 @@ namespace asttree {
     void BNFConverter::doZeroOrMore(expr* target, treenode* rhs)
 
     Takes a target expression and creates the necessary rules to
-    repeat it zero or more times. 
+    repeat it zero or more times.
 
    *************************************************************/
   void BNFConverter::doZeroOrMore(expr* target, treenode* rhs) {
     /* Insert code here */
   }
- 
+
   /*************************************************************
     void BNFConverter::doZeroOrOne(expr* target, treenode* rhs)
 
     Takes a target expression and creates the necessary rules to
-    repeat it zero or one time.  
-	
+    repeat it zero or one time.
+
    *************************************************************/
   void BNFConverter::doZeroOrOne(expr* target, treenode* rhs) {
-    /* Insert code here */	   
+    /* Insert code here */
   }
- 
+
   /*************************************************************
     void BNFConverter::doOneOrMore(expr* target, treenode* rhs)
 

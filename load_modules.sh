@@ -11,5 +11,5 @@
 module load bison-3.7
 module load flex-2.6
 
-## If flex is still 2.5, uncomment the next line 
+## If flex is still 2.5, uncomment the next line
 # module switch flex-2.6
