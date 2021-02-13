@@ -2,7 +2,7 @@
 
 #################################
 #  Load bison 3.7 and flex 2.6  #
-#        on CIMS machines       #
+#       on CIMS machines        #
 #                               #
 #        by Ziyang Zeng         #
 #          Feb. 2021            #

@@ -3,8 +3,8 @@
 #################################
 #  Flex and Bison build script  #
 #                               #
-#       by Ziyang Zeng          #
-#         Feb. 2021             #
+#         by Ziyang Zeng        #
+#           Feb. 2021           #
 #################################
 
 
@@ -21,21 +21,21 @@ dist_binary_dir="$dist_dir/bin"
 # Clean artifacts
 
 if [ -d "$dist_dir" ] ; then
-    echo "Cleaning previous build artifacts..."
-    rm -rf "$dist_dir"
-    echo " - Finished."
-    echo ""
+  echo "Cleaning previous build artifacts..."
+  rm -rf "$dist_dir"
+  echo " - Finished."
+  echo ""
 fi
 
 
 # Setup and build
 
 if [ ! -d "$dist_c_source_dir" ] ; then
-    mkdir -p "$dist_c_source_dir"
+  mkdir -p "$dist_c_source_dir"
 fi
 
 if [ ! -d "$dist_binary_dir" ] ; then
-    mkdir -p "$dist_binary_dir"
+  mkdir -p "$dist_binary_dir"
 fi
 
 echo "Bison: generating parser c source file..."
@@ -50,12 +50,12 @@ echo ""
 
 echo "g++: compiling translator..."
 g++ \
-    -std=c++11 \
-    -I "$source_dir" \
-    -o "$dist_binary_dir/trans" \
-    "$dist_c_source_dir/trans.yy.c" \
-    "$dist_c_source_dir/trans.tab.c" \
-    "$source_dir/treenode.cpp"
+  -std=c++11 \
+  -I "$source_dir" \
+  -o "$dist_binary_dir/trans" \
+  "$dist_c_source_dir/trans.yy.c" \
+  "$dist_c_source_dir/trans.tab.c" \
+  "$source_dir/treenode.cpp"
 echo " - Success. Executable binary at: $dist_binary_dir/trans"
 echo ""
 

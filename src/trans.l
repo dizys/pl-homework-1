@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <vector>
 
-/* needs to come before trans.tab.h  */
+/* needs to come before trans.tab.h */
 #include "treenode.h"
 using namespace asttree;
 
-#include "trans.tab.h"  /* We want the tokens defined in trans.y. */
+#include "trans.tab.h" /* We want the tokens defined in trans.y. */
 
 using namespace std;
 
