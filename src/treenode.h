@@ -13,6 +13,10 @@ using namespace std;
 #define NULL_STRING_VAL "NULL"
 #define EMPTY_VAL " /* empty */"
 
+#define NAME_RULE_SPLITTER ":\n    "
+#define RULE_OR_SPLITTER "\n  |\n    "
+#define EPSILON_TRANS string("/*epsilon*/")
+
 namespace asttree {
   class treenode;
   class prog;
@@ -44,8 +48,8 @@ namespace asttree {
   protected:
     int numChildren=0;
   public:
-    static set<string>* termAndNontermSet;
-    // static vector<string>* extraProductionVector;
+    static set<string> termAndNontermSet;
+    static vector<string> extraProductionVector;
     static string getNewUnTakenNonterm(const string& prefix);
     string parentRewrite;
     string termOrNonterm = "";
@@ -142,15 +146,10 @@ namespace asttree {
           children[i]->doConversion();
         }
       }
-      afterConversion();
     }
 
-    virtual void afterConversion() {
-      for (int i=0; i < numChildren; i++) {
-        if (children[i] != NULL) {
-          // vector<string> childProductions = children[i]->
-        }
-      }
+    void insertExtraProduction(const string& name, const string& rule) {
+      extraProductionVector.insert(extraProductionVector.end(), name + NAME_RULE_SPLITTER + rule);
     }
   };
 

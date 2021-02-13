@@ -5,17 +5,14 @@
 
 using namespace std;
 
-#define NAME_RULE_SPLITTER ":\n    "
-#define RULE_OR_SPLITTER "\n  |\n    "
-#define EPSILON_TRANS string("/*epsilon*/")
 
 namespace asttree {
-  set<string>* treenode::termAndNontermSet = new set<string>();
-  // vector<string>* treenode::extraProductionVector = new vector<string>();
+  set<string> treenode::termAndNontermSet;
+  vector<string> treenode::extraProductionVector;
 
   string treenode::getNewUnTakenNonterm(const string& prefix) {
-    if (treenode::termAndNontermSet->find(prefix) == treenode::termAndNontermSet->end()) {
-      treenode::termAndNontermSet->insert(prefix);
+    if (treenode::termAndNontermSet.find(prefix) == treenode::termAndNontermSet.end()) {
+      treenode::termAndNontermSet.insert(prefix);
       return prefix;
     }
 
@@ -23,8 +20,8 @@ namespace asttree {
 
     while (true) {
       string newNonterm = prefix + "_" + to_string(i);
-      if (treenode::termAndNontermSet->find(newNonterm) == treenode::termAndNontermSet->end()) {
-        treenode::termAndNontermSet->insert(newNonterm);
+      if (treenode::termAndNontermSet.find(newNonterm) == treenode::termAndNontermSet.end()) {
+        treenode::termAndNontermSet.insert(newNonterm);
         return newNonterm;
       }
       i++;
@@ -36,6 +33,7 @@ namespace asttree {
   }
 
   void quant::doConversion() {
+    beforeConversion();
     if (numChildren == 1) {
       base* bs_node = (base*)getChild(0);
       bs_node->setParent(this);
@@ -52,52 +50,68 @@ namespace asttree {
         string subProductionName = treenode::getNewUnTakenNonterm(productionName + "_sub");
         string productionRule = bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
         string subProductionRule = bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
-        // treenode::extraProductionVector->insert(productionName + NAME_RULE_SPLITTER + productionRule);
-        // treenode::extraProductionVector->insert(subProductionName + NAME_RULE_SPLITTER + subProductionRule);
+        insertExtraProduction(productionName, productionRule);
+        insertExtraProduction(subProductionName, subProductionRule);
         termOrNonterm = productionName;
       } else if (t2_node->value() == "*") {
         string productionName = treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
         string productionRule = EPSILON_TRANS + RULE_OR_SPLITTER + bs_name + " " + productionName;
-        // treenode::extraProductionVector->insert(productionName + NAME_RULE_SPLITTER + productionRule);
+        insertExtraProduction(productionName, productionRule);
+        termOrNonterm = productionName;
+      }
+    } else if (numChildren == 3) {
+      terminal* t1_node = (terminal*)getChild(0);
+      base* bs_node = (base*)getChild(1);
+      bs_node->setParent(this);
+      bs_node->doConversion();
+      string bs_name = bs_node->termOrNonterm;
+      if (t1_node->value() == "<") {
+        string productionName = treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
+        string productionRule = EPSILON_TRANS + RULE_OR_SPLITTER + bs_name + " " + productionName;
+        insertExtraProduction(productionName, productionRule);
+        termOrNonterm = productionName;
+      } else if (t1_node->value() == "[") {
+        string productionName = treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
+        string productionRule = EPSILON_TRANS + RULE_OR_SPLITTER + bs_name;
+        insertExtraProduction(productionName, productionRule);
+        termOrNonterm = productionName;
       }
     }
   }
 
   void base::doConversion() {
+    beforeConversion();
     if (numChildren == 1) {
       term_and_nonterms* nt_node = (term_and_nonterms*)getChild(0);
-      nt_node->setParent(this);
       nt_node->doConversion();
       termOrNonterm = nt_node->termOrNonterm;
     } else if (numChildren == 3) {
       subexpr* se_node = (subexpr*)getChild(0);
-      se_node->setParent(this);
       se_node->doConversion();
       string productionName = treenode::getNewUnTakenNonterm(parentRewrite + "_base");
-      // treenode::extraProductionVector->insert(productionName + " : " + se_node->termOrNonterm);
+      insertExtraProduction(productionName, se_node->termOrNonterm);
       termOrNonterm = productionName;
     }
   }
 
   term_and_nonterms::term_and_nonterms(treenode* t): treenode(t) {
     string t_val = ((terminal*)t)->value();
-    treenode::termAndNontermSet->insert(t_val);
+    treenode::termAndNontermSet.insert(t_val);
   }
 
   term_and_nonterms::term_and_nonterms(treenode* t, treenode* tn): treenode(t, tn) {
     string t_val = ((terminal*)t)->value();
-    treenode::termAndNontermSet->insert(t_val);
+    treenode::termAndNontermSet.insert(t_val);
   }
 
   void term_and_nonterms::doConversion() {
+    beforeConversion();
     terminal* t1_node = (terminal*)getChild(0);
     string t1_val = t1_node->value();
-    t1_node->setParent(this);
     if (numChildren == 1) {
       termOrNonterm = t1_val;
     } else if (numChildren == 2) {
       term_and_nonterms* nt2_node = (term_and_nonterms*)getChild(1);
-      nt2_node->setParent(this);
       nt2_node->doConversion();
       string nt2_val = nt2_node->termOrNonterm;
       termOrNonterm = t1_val + " " + nt2_val;
