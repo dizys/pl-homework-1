@@ -34,16 +34,32 @@ statement::statement(treenode *t1, treenode *t2, treenode *ete, treenode *t3)
   parentRewrite = ((terminal *)t1)->value();
 }
 
+void subexpr::doConversion() {
+  beforeConversion();
+  quant *q_node = (quant *)getChild(0);
+  q_node->doConversion();
+  if (numChildren == 1) {
+    termOrNonterm = q_node->termOrNonterm;
+  } else if (numChildren == 3) {
+    subexpr *se_node = (subexpr *)getChild(2);
+    se_node->doConversion();
+    string productionName =
+        treenode::getNewUnTakenNonterm(parentRewrite + "_subexpr");
+    string productionRule =
+        q_node->termOrNonterm + RULE_OR_SPLITTER + se_node->termOrNonterm;
+    insertExtraProduction(productionName, productionRule);
+    termOrNonterm = productionName;
+  }
+}
+
 void quant::doConversion() {
   beforeConversion();
   if (numChildren == 1) {
     base *bs_node = (base *)getChild(0);
-    bs_node->setParent(this);
     bs_node->doConversion();
     termOrNonterm = bs_node->termOrNonterm;
   } else if (numChildren == 2) {
     base *bs_node = (base *)getChild(0);
-    bs_node->setParent(this);
     bs_node->doConversion();
     terminal *t2_node = (terminal *)getChild(1);
     string bs_name = bs_node->termOrNonterm;
@@ -70,7 +86,6 @@ void quant::doConversion() {
   } else if (numChildren == 3) {
     terminal *t1_node = (terminal *)getChild(0);
     base *bs_node = (base *)getChild(1);
-    bs_node->setParent(this);
     bs_node->doConversion();
     string bs_name = bs_node->termOrNonterm;
     if (t1_node->value() == "<") {
@@ -97,12 +112,9 @@ void base::doConversion() {
     nt_node->doConversion();
     termOrNonterm = nt_node->termOrNonterm;
   } else if (numChildren == 3) {
-    subexpr *se_node = (subexpr *)getChild(0);
+    subexpr *se_node = (subexpr *)getChild(1);
     se_node->doConversion();
-    string productionName =
-        treenode::getNewUnTakenNonterm(parentRewrite + "_base");
-    insertExtraProduction(productionName, se_node->termOrNonterm);
-    termOrNonterm = productionName;
+    termOrNonterm = se_node->termOrNonterm;
   }
 }
 

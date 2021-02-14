@@ -190,6 +190,7 @@ class subexpr : public treenode {
 public:
   subexpr(treenode *q) : treenode(q) {}
   subexpr(treenode *q, treenode *t, treenode *se) : treenode(q, t, se) {}
+  void doConversion();
 };
 
 class quant : public treenode {

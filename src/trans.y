@@ -60,6 +60,10 @@ epsilon_trans_expr:
       $$ = new epsilon_trans_expr($1, $2, $3);
     }
   |
+    ENDL expr {
+      $$ = new epsilon_trans_expr($2);
+    }
+  |
     expr {
       $$ = new epsilon_trans_expr($1);
     }

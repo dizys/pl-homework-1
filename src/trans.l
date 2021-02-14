@@ -64,7 +64,7 @@ int flag=0;
 }
 
  /* RegEx for terminals and non-terminals goes here */
-[a-zA-Z][a-zA-Z0-9_]*|"'"[a-zA-Z][a-zA-Z0-9_]*"'" {
+[a-zA-Z][a-zA-Z0-9_]+|'[a-zA-Z][a-zA-Z0-9_]+' {
   yylval.val = new terminal(yytext);
   if (section != 2) {
     cout << yytext;
@@ -151,7 +151,6 @@ int flag=0;
   /* always discard directives */
   cout << yytext;
 }
-
 
  /* Section divider */
 "%%" {
