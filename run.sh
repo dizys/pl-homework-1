@@ -26,8 +26,8 @@ fi
 if [ ! -f "$1" ] ; then
   echo -e "\033[31;1mError: argument EXAMPLE_PATH cannot be empty.\033[0m"
   echo ""
-  echo "Usage: ./run_example.sh EXAMPLE_PATH"
-  echo "  e.g. \`./run_example.sh ./examples/cal1.y\`"
+  echo "Usage: ./run.sh EXAMPLE_PATH"
+  echo "  e.g. \`./run.sh ./examples/cal1.y\`"
   exit
 fi
 
