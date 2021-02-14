@@ -115,11 +115,11 @@ quant:
       $$ = new quant($1, $2);
     }
   |
-    REP_ZERO_LEFT base REP_ZERO_RIGHT {
+    REP_ZERO_LEFT subexpr REP_ZERO_RIGHT {
       $$ = new quant($1, $2, $3);
     }
   |
-    OPTION_LEFT base OPTION_RIGHT {
+    OPTION_LEFT subexpr OPTION_RIGHT {
       $$ = new quant($1, $2, $3);
     }
   ;

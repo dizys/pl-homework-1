@@ -89,7 +89,7 @@ int countLines(const string &text) {
 }
 
  /* RegEx for terminals and non-terminals goes here */
-[a-zA-Z][a-zA-Z0-9_]*|'[^']+' {
+[a-zA-Z][a-zA-Z0-9_]*|'[^'\\]'|'\\.'|\"[^\"]+\" {
   yylval.val = new terminal(yytext);
   if (section != 2) {
     cout << yytext;

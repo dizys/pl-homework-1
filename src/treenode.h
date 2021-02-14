@@ -221,7 +221,7 @@ class quant : public treenode {
 public:
   quant(treenode *b) : treenode(b) {}
   quant(treenode *b, treenode *t) : treenode(b, t) {}
-  quant(treenode *t1, treenode *b, treenode *t2) : treenode(t1, b, t2) {}
+  quant(treenode *t1, treenode *se, treenode *t2) : treenode(t1, se, t2) {}
   void doConversion();
 };
 

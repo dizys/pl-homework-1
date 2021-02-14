@@ -204,20 +204,20 @@ void quant::doConversion() {
     }
   } else if (numChildren == 3) {
     terminal *t1_node = (terminal *)getChild(0);
-    base *bs_node = (base *)getChild(1);
-    bs_node->doConversion();
-    string bs_name = bs_node->termOrNonterm;
+    subexpr *se_node = (subexpr *)getChild(1);
+    se_node->doConversion();
+    string se_name = se_node->termOrNonterm;
     if (t1_node->value() == "<") {
       string productionName =
           treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
       string productionRule =
-          EPSILON_TRANS + RULE_OR_SPLITTER + bs_name + " " + productionName;
+          EPSILON_TRANS + RULE_OR_SPLITTER + se_name + " " + productionName;
       insertExtraProduction(productionName, productionRule);
       termOrNonterm = productionName;
     } else if (t1_node->value() == "[") {
       string productionName =
           treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
-      string productionRule = EPSILON_TRANS + RULE_OR_SPLITTER + bs_name;
+      string productionRule = EPSILON_TRANS + RULE_OR_SPLITTER + se_name;
       insertExtraProduction(productionName, productionRule);
       termOrNonterm = productionName;
     }
