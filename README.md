@@ -52,7 +52,7 @@ Then, the executable binary should be available at `dist/bin/trans`
 When running, the translator binary reads from standard input (`stdin`) and
 output its translation to standard output (`stdout`).
 
-#### 3.1.1 Direct input and output
+#### 3.1.1 Direct input and output (not recommended)
 
 You can type all the content that needs to be translated and end it with
 `Ctrl+D`. But as is shown by the following example, the output would be
@@ -93,9 +93,9 @@ $ cat example/cal1.y | ./dist/bin/trans > example/cal1.out.y
 
 ## 3.2 Example runner / helper script: `run.sh`
 
-This project includes 6 example bison source files, 2 with BNF rules
+This project includes 7 example bison source files, 2 with BNF rules
 (`cal1.y`, `cal2.y`), the others with EBNF rules (`test1.y`, `test2.y`,
-`test3.y`, `test4.y`).
+`test3.y`, `test4.y`, `test5.y`).
 
 To translate an example file or any file, you can try:
 
