@@ -53,6 +53,8 @@ public:
   static set<string> termAndNontermSet;
   static vector<string> extraProductionVector;
   static string getNewUnTakenNonterm(const string &prefix);
+  string nodeType = "unknown";
+  vector<string> selfRecursiveTermOrNontermVector;
   string parentRewrite;
   string termOrNonterm = "";
 
@@ -143,6 +145,11 @@ public:
     extraProductionVector.insert(extraProductionVector.end(),
                                  name + NAME_RULE_SPLITTER + rule);
   }
+
+  void insertSelfRecursiveTermOrNonterm(const string &termOrNonterm) {
+    selfRecursiveTermOrNontermVector.insert(
+        selfRecursiveTermOrNontermVector.end(), termOrNonterm);
+  }
 };
 
 /* Subclasses should be named after the left-hand-side of each
@@ -182,12 +189,15 @@ class empty : public treenode {};
 
 class expr : public treenode {
 public:
+  string nodeType = "expr";
   expr(treenode *se) : treenode(se) {}
   expr(treenode *se, treenode *t, treenode *e) : treenode(se, t, e) {}
+  void doConversion();
 };
 
 class subexpr : public treenode {
 public:
+  string nodeType = "subexpr";
   subexpr(treenode *q) : treenode(q) {}
   subexpr(treenode *q, treenode *t, treenode *se) : treenode(q, t, se) {}
   void doConversion();
