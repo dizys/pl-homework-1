@@ -21,7 +21,7 @@ statement: PRINT expr_list
     IF expression RELOP expression THEN statement
     GOTO expression
     INPUT var_list
-    LET VAR = expression
+    LET VAR '=' expression
     GOSUB expression
     RETURN
     CLEAR
@@ -30,7 +30,7 @@ statement: PRINT expr_list
     END
   ;
 
-expr_list: (STRING|expression) (COMMA (STRING|expression) )*;
+expr_list: (STRING||expression) (COMMA (STRING||expression) )*;
 var_list: VAR (COMMA VAR)*;
 expression: PLUMIN term (PLUMIN term)*;
 term: factor (MULDIV factor)*;

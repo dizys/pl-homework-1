@@ -103,6 +103,12 @@ To translate an example file or any file, you can try:
 $ ./run.sh ./examples/test1.y
 ```
 
+Output translation result to a file:
+
+```
+$ ./run.sh ./examples/test1.y > ./examples/test1.out.y
+```
+
 `./examples/test1.y` could be replaced with any path to a valid Bison file
 with BNF/EBNF rules.
 
