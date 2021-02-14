@@ -16,6 +16,7 @@ using namespace std;
 #define NAME_RULE_SPLITTER ":\n    "
 #define RULE_OR_SPLITTER "\n  |\n    "
 #define EPSILON_TRANS string("/*epsilon*/")
+#define PRODUCTION_END_SEMI "\n  ;\n"
 
 namespace asttree {
 class treenode;
@@ -53,8 +54,7 @@ public:
   static set<string> termAndNontermSet;
   static vector<string> extraProductionVector;
   static string getNewUnTakenNonterm(const string &prefix);
-  string nodeType = "unknown";
-  vector<string> selfRecursiveTermOrNontermVector;
+  vector<string> selfRecursiveVector;
   string parentRewrite;
   string termOrNonterm = "";
 
@@ -81,6 +81,8 @@ public:
     children[2] = t3;
     children[3] = t4;
   }
+
+  virtual string getType() { return "unknown"; }
 
   void setParent(treenode *p) {
     if (!(p->parentRewrite).empty()) {
@@ -146,9 +148,8 @@ public:
                                  name + NAME_RULE_SPLITTER + rule);
   }
 
-  void insertSelfRecursiveTermOrNonterm(const string &termOrNonterm) {
-    selfRecursiveTermOrNontermVector.insert(
-        selfRecursiveTermOrNontermVector.end(), termOrNonterm);
+  void insertSelfRecursive(const string &termOrNonterm) {
+    selfRecursiveVector.insert(selfRecursiveVector.end(), termOrNonterm);
   }
 };
 
@@ -166,16 +167,16 @@ class statements : public treenode {
 public:
   statements(treenode *s) : treenode(s) {}
   statements(treenode *s, treenode *ss) : treenode(s, ss) {}
+
+  string getType() { return "statements"; }
+  void doConversion();
 };
 
 class statement : public treenode {
 public:
+  string productions;
   statement(treenode *t1, treenode *t2, treenode *ete, treenode *t3);
-
-  virtual void print(ostream &o) const {
-    treenode::print(o);
-    o << endl << endl;
-  }
+  void doConversion();
 };
 
 class epsilon_trans_expr : public treenode {
@@ -183,23 +184,24 @@ public:
   epsilon_trans_expr(treenode *t1, treenode *t2, treenode *e)
       : treenode(t1, t2, e) {}
   epsilon_trans_expr(treenode *e) : treenode(e) {}
+  void doConversion();
 };
 
 class empty : public treenode {};
 
 class expr : public treenode {
 public:
-  string nodeType = "expr";
   expr(treenode *se) : treenode(se) {}
   expr(treenode *se, treenode *t, treenode *e) : treenode(se, t, e) {}
+  string getType() { return "expr"; }
   void doConversion();
 };
 
 class subexpr : public treenode {
 public:
-  string nodeType = "subexpr";
   subexpr(treenode *q) : treenode(q) {}
   subexpr(treenode *q, treenode *t, treenode *se) : treenode(q, t, se) {}
+  string getType() { return "subexpr"; }
   void doConversion();
 };
 
