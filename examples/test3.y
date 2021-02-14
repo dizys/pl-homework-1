@@ -5,9 +5,10 @@ int yylex();
 int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %}
 
-%start assign
+%start block
 
-%type <val> assign identifier float digit letter
+%type <val> block statement assign_statament value identifier 
+%type <val> number boolean string char digit letter;
 
 %%
 
