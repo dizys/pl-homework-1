@@ -11,9 +11,21 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 
 %%
 
-escape_hell: double_quoted | single_quoted;
+escape_hell: 
+    double_quoted 
+  | 
+    single_quoted
+  ;
 
-double_quoted: "hello" | "So \"easy\"!" | "line1\nline2" | "C:\\Users\\Documents";
+double_quoted: 
+    "hello" 
+  | 
+    "So \"easy\"!"
+  |
+    "line1\nline2"
+  |
+    "C:\\Users\\Documents"
+  ;
 
 single_quoted: '{' | '\n' | '\\';
 

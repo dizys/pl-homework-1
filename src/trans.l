@@ -89,7 +89,8 @@ int countLines(const string &text) {
 }
 
  /* RegEx for terminals and non-terminals goes here */
- /*   Non-terminal   | Char terminal |              String terminal             */ 
+ /*    This supports single/double quote escape     */
+ /*      Symbol      | Char terminal |              String terminal             */ 
 [a-zA-Z][a-zA-Z0-9_]*|'[^'\\]'|'\\.'|\"[^\"]*[^\\\"]\"|\"[^\\\"]*(\\.[^\\\"]*)+\" {
   yylval.val = new terminal(yytext);
   if (section != 2) {
