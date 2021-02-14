@@ -28,7 +28,7 @@ using namespace std;
 %token <val> RULE_OR
 %token <val> REP_ONE REP_ZERO
 
-%type <val> prog statements statement epsilon_trans_expr expr subexpr quant base term_and_nonterms
+%type <val> prog statements statement epsilon_trans_expr expr subexpr concat quant base term_and_nonterms
 
 %%
 
@@ -83,12 +83,22 @@ expr:
   ;
 
 subexpr:
-    quant {
+    concat {
       $$ = new subexpr($1);
     }
   |
-    quant GROUP_OR subexpr {
+    concat GROUP_OR subexpr {
       $$ = new subexpr($1, $2, $3);
+    }
+  ;
+
+concat:
+    quant {
+      $$ = new concat($1);
+    }
+  |
+    quant concat {
+      $$ = new concat($1, $2);
     }
   ;
 

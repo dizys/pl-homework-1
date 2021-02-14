@@ -90,25 +90,26 @@ void expr::doConversion() {
   } else if (numChildren == 3) {
     expr *e_node = (expr *)getChild(2);
     e_node->doConversion();
-    treenode *parent_node = getParent();
-    if (parent_node->getType() == "expr") {
-      expr *parent_expr = (expr *)parent_node;
-      parent_expr->insertSelfRecursive(se_node->termOrNonterm);
-      if (!e_node->termOrNonterm.empty()) {
-        parent_expr->insertSelfRecursive(e_node->termOrNonterm);
-      } else {
-        for (vector<string>::iterator it = selfRecursiveVector.begin();
-             it != selfRecursiveVector.end(); it++) {
-          parent_expr->insertSelfRecursive(*it);
-        }
-      }
+    insertSelfRecursive(se_node->termOrNonterm);
+    if (!e_node->termOrNonterm.empty()) {
+      insertSelfRecursive(e_node->termOrNonterm);
     } else {
+      for (vector<string>::iterator it = e_node->selfRecursiveVector.begin();
+           it != e_node->selfRecursiveVector.end(); it++) {
+        insertSelfRecursive(*it);
+      }
+    }
+    treenode *parent_node = getParent();
+    if (parent_node->getType() != "expr") {
       string productionName =
           treenode::getNewUnTakenNonterm(parentRewrite + "_expr");
-      string productionRule = se_node->termOrNonterm;
+      string productionRule;
       for (vector<string>::iterator it = selfRecursiveVector.begin();
            it != selfRecursiveVector.end(); it++) {
-        productionRule += RULE_OR_SPLITTER + *it;
+        if (it != selfRecursiveVector.begin()) {
+          productionRule += RULE_OR_SPLITTER;
+        }
+        productionRule += *it;
       }
       insertExtraProduction(productionName, productionRule);
       termOrNonterm = productionName;
@@ -118,33 +119,57 @@ void expr::doConversion() {
 
 void subexpr::doConversion() {
   beforeConversion();
+  concat *c_node = (concat *)getChild(0);
+  c_node->doConversion();
+  if (numChildren == 1) {
+    termOrNonterm = c_node->termOrNonterm;
+  } else if (numChildren == 3) {
+    subexpr *se_node = (subexpr *)getChild(2);
+    se_node->doConversion();
+    insertSelfRecursive(c_node->termOrNonterm);
+    if (!se_node->termOrNonterm.empty()) {
+      insertSelfRecursive(se_node->termOrNonterm);
+    } else {
+      for (vector<string>::iterator it = se_node->selfRecursiveVector.begin();
+           it != se_node->selfRecursiveVector.end(); it++) {
+        insertSelfRecursive(*it);
+      }
+    }
+    treenode *parent_node = getParent();
+    if (parent_node->getType() != "subexpr") {
+      string productionName =
+          treenode::getNewUnTakenNonterm(parentRewrite + "_subexpr");
+      string productionRule;
+      for (vector<string>::iterator it = selfRecursiveVector.begin();
+           it != selfRecursiveVector.end(); it++) {
+        if (it != selfRecursiveVector.begin()) {
+          productionRule += RULE_OR_SPLITTER;
+        }
+        productionRule += *it;
+      }
+      insertExtraProduction(productionName, productionRule);
+      termOrNonterm = productionName;
+    }
+  }
+}
+
+void concat::doConversion() {
+  beforeConversion();
   quant *q_node = (quant *)getChild(0);
   q_node->doConversion();
   if (numChildren == 1) {
     termOrNonterm = q_node->termOrNonterm;
-  } else if (numChildren == 3) {
-    subexpr *se_node = (subexpr *)getChild(2);
-    se_node->doConversion();
+  } else if (numChildren == 2) {
+    concat *c_node = (concat *)getChild(1);
+    c_node->doConversion();
     treenode *parent_node = getParent();
-    if (parent_node->getType() == "subexpr") {
-      subexpr *parent_subexpr = (subexpr *)parent_node;
-      parent_subexpr->insertSelfRecursive(q_node->termOrNonterm);
-      if (!se_node->termOrNonterm.empty()) {
-        parent_subexpr->insertSelfRecursive(se_node->termOrNonterm);
-      } else {
-        for (vector<string>::iterator it = selfRecursiveVector.begin();
-             it != selfRecursiveVector.end(); it++) {
-          parent_subexpr->insertSelfRecursive(*it);
-        }
-      }
+    if (parent_node->getType() == "concat") {
+      termOrNonterm = q_node->termOrNonterm + " " + c_node->termOrNonterm;
     } else {
       string productionName =
-          treenode::getNewUnTakenNonterm(parentRewrite + "_subexpr");
-      string productionRule = q_node->termOrNonterm;
-      for (vector<string>::iterator it = selfRecursiveVector.begin();
-           it != selfRecursiveVector.end(); it++) {
-        productionRule += RULE_OR_SPLITTER + *it;
-      }
+          treenode::getNewUnTakenNonterm(parentRewrite + "_concat");
+      string productionRule =
+          q_node->termOrNonterm + " " + c_node->termOrNonterm;
       insertExtraProduction(productionName, productionRule);
       termOrNonterm = productionName;
     }
@@ -165,13 +190,8 @@ void quant::doConversion() {
     if (t2_node->value() == "+") {
       string productionName =
           treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
-      string subProductionName =
-          treenode::getNewUnTakenNonterm(productionName + "_sub");
-      string subProductionRule =
-          bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
       string productionRule =
-          bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
-      insertExtraProduction(subProductionName, subProductionRule);
+          bs_name + RULE_OR_SPLITTER + bs_name + " " + productionName;
       insertExtraProduction(productionName, productionRule);
       termOrNonterm = productionName;
     } else if (t2_node->value() == "*") {
@@ -237,8 +257,16 @@ void term_and_nonterms::doConversion() {
   } else if (numChildren == 2) {
     term_and_nonterms *nt2_node = (term_and_nonterms *)getChild(1);
     nt2_node->doConversion();
-    string nt2_val = nt2_node->termOrNonterm;
-    termOrNonterm = t1_val + " " + nt2_val;
+    treenode *parent_node = getParent();
+    if (parent_node->getType() == "term_and_nonterms") {
+      termOrNonterm = t1_val + " " + nt2_node->termOrNonterm;
+    } else {
+      string productionName =
+          treenode::getNewUnTakenNonterm(parentRewrite + "_nonterm");
+      string productionRule = t1_val + " " + nt2_node->termOrNonterm;
+      insertExtraProduction(productionName, productionRule);
+      termOrNonterm = productionName;
+    }
   }
 }
 } // namespace asttree

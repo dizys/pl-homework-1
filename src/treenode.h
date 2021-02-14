@@ -27,6 +27,7 @@ class epsilon_trans_expr;
 class empty;
 class expr;
 class subexpr;
+class concat;
 class quant;
 class base;
 class term_and_nonterms;
@@ -202,9 +203,17 @@ public:
 
 class subexpr : public treenode {
 public:
-  subexpr(treenode *q) : treenode(q) {}
-  subexpr(treenode *q, treenode *t, treenode *se) : treenode(q, t, se) {}
+  subexpr(treenode *c) : treenode(c) {}
+  subexpr(treenode *c, treenode *t, treenode *se) : treenode(c, t, se) {}
   string getType() { return "subexpr"; }
+  void doConversion();
+};
+
+class concat : public treenode {
+public:
+  concat(treenode *q) : treenode(q) {}
+  concat(treenode *q, treenode *c) : treenode(q, c) {}
+  string getType() { return "concat"; }
   void doConversion();
 };
 
@@ -228,6 +237,7 @@ public:
   term_and_nonterms(treenode *t);
   term_and_nonterms(treenode *t, treenode *tn);
   void doConversion();
+  string getType() { return "term_and_nonterms"; }
 };
 
 class terminal : public treenode {
@@ -242,8 +252,6 @@ public:
   }
 
   virtual string value() const { return s; }
-
-  virtual void print(ostream &o) const { o << s << " "; }
 };
 } // namespace asttree
 
