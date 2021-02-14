@@ -28,6 +28,18 @@ int section=1;
   rather than interpret it as a newline.
 */
 int flag=0;
+
+int countLines(const string &text) {
+  string needle="\n";
+  int nPos = text.find(needle, 0);
+  int count = 1;
+  while (nPos != string::npos)
+  {
+    count++;
+    nPos = text.find(needle, nPos + needle.size());
+  }
+  return count;
+}
 %}
 
 %option noyywrap
@@ -36,12 +48,21 @@ int flag=0;
 
 "/*" {
   /* skip multiline comments */
+  if (section != 2) {
+    cout << yytext;
+  }
   int c;
   while ((c = yyinput()) != 0) {
+    if (section != 2) {
+      cout << (char)c;
+    }
     if (c == '\n') {
       ++yylineno; /* increment the line number */
     } else if (c == '*') {
       if ((c = yyinput()) == '/') {
+        if (section != 2) {
+          cout << (char)c;
+        }
         break;
       }
       unput(c); /* we did not see the /.  Oh well, put it back. */
@@ -53,6 +74,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO_LEFT;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -60,6 +83,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO_RIGHT;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -79,6 +104,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return OPTION_LEFT;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -86,6 +113,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return OPTION_RIGHT;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -93,6 +122,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return GROUPING_LEFT;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -100,6 +131,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return GROUPING_RIGHT;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -107,6 +140,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ONE;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -114,6 +149,8 @@ int flag=0;
   yylval.val = new terminal(yytext);
   if (section==2) {
     return REP_ZERO;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -121,6 +158,8 @@ int flag=0;
   yylval.val = new terminal("|");
   if (section==2) {
     return GROUP_OR;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -128,6 +167,8 @@ int flag=0;
   yylval.val = new terminal("\n  |");
   if (section==2) {
     return RULE_OR;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -136,6 +177,8 @@ int flag=0;
     flag=1; /* line empty if newline afer this */
     yylval.val = new terminal(yytext);
     return REWRITES;
+  } else {
+    cout << yytext;
   }
 }
 
@@ -143,13 +186,9 @@ int flag=0;
   yylval.val = new terminal("\n   ;");
   if (section==2) {
     return SEMI;
+  } else {
+    cout << yytext;
   }
-}
-
-  /* Anything in the definitions section that begins with %  */
-"%"[^%].* {
-  /* always discard directives */
-  cout << yytext;
 }
 
  /* Section divider */
@@ -164,6 +203,7 @@ int flag=0;
  /* Code block. %{ ...  %}
     Warning: possibly multiple lines!  */
 "%{"[.\n]*"%}" {
+  yylineno+=countLines(yytext)-1;
   /* discard flex code block */
   cout << yytext;
 }
@@ -171,12 +211,14 @@ int flag=0;
 
  /* This is the %union directive. Also can span multiple lines. */
 "%union {"[^}]*"};" {
+  yylineno+=countLines(yytext)-1;
   /* discard union code block */
   cout << yytext;
 }
 
  /* Code action block of the form { .... } */
 "{"[^}]*"}" {
+  yylineno+=countLines(yytext)-1;
   /* discard action code block */
   if (section != 2) {
     cout << yytext;
@@ -184,6 +226,7 @@ int flag=0;
 }
 
 [\n\r]+ {
+  yylineno+=countLines(yytext)-1;
   if (section!=2) {
     cout << yytext;
   }

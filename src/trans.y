@@ -36,8 +36,9 @@ prog:
     SECTION statements SECTION {
       $$ = new prog($1,$2,$3);
       $$->doConversion();
+      $$->print(cout);
     }
-;
+  ;
 
 statements:
     statement {
@@ -47,13 +48,13 @@ statements:
     statement statements {
       $$ = new statements($1, $2);
     }
-;
+  ;
 
 statement:
     TERM_OR_NONTERM REWRITES epsilon_trans_expr SEMI {
         $$ = new statement($1, $2, $3, $4);
     }
-;
+  ;
 
 epsilon_trans_expr:
     ENDL RULE_OR expr {
@@ -67,7 +68,7 @@ epsilon_trans_expr:
     expr {
       $$ = new epsilon_trans_expr($1);
     }
-;
+  ;
 
  /* Fill in any other rules here */
 
@@ -79,7 +80,7 @@ expr:
     subexpr RULE_OR expr {
       $$ = new expr($1, $2, $3);
     }
-;
+  ;
 
 subexpr:
     quant {
@@ -89,7 +90,7 @@ subexpr:
     quant GROUP_OR subexpr {
       $$ = new subexpr($1, $2, $3);
     }
-;
+  ;
 
 quant:
   base {
@@ -111,7 +112,7 @@ quant:
     OPTION_LEFT base OPTION_RIGHT {
       $$ = new quant($1, $2, $3);
     }
-;
+  ;
 
 base:
     GROUPING_LEFT subexpr GROUPING_RIGHT {
@@ -121,7 +122,7 @@ base:
     term_and_nonterms {
       $$ = new base($1);
     }
-;
+  ;
 
 term_and_nonterms:
     TERM_OR_NONTERM {
@@ -131,7 +132,7 @@ term_and_nonterms:
     TERM_OR_NONTERM term_and_nonterms {
       $$ = new term_and_nonterms($1, $2);
     }
-;
+  ;
 
 %%
 

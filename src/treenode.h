@@ -16,7 +16,7 @@ using namespace std;
 #define NAME_RULE_SPLITTER ":\n    "
 #define RULE_OR_SPLITTER "\n  |\n    "
 #define EPSILON_TRANS string("/*epsilon*/")
-#define PRODUCTION_END_SEMI "\n  ;\n"
+#define PRODUCTION_END_SEMI "\n  ;\n\n"
 
 namespace asttree {
 class treenode;
@@ -160,14 +160,17 @@ public:
 
 class prog : public treenode {
 public:
+  string convertedSection;
   prog(treenode *t1, treenode *ss, treenode *t2) : treenode(t1, ss, t2) {}
+  void doConversion();
+  virtual void print(ostream &o) const { o << convertedSection; }
 };
 
 class statements : public treenode {
 public:
+  string productions;
   statements(treenode *s) : treenode(s) {}
   statements(treenode *s, treenode *ss) : treenode(s, ss) {}
-
   string getType() { return "statements"; }
   void doConversion();
 };

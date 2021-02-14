@@ -29,15 +29,29 @@ string treenode::getNewUnTakenNonterm(const string &prefix) {
   }
 }
 
-statement::statement(treenode *t1, treenode *t2, treenode *ete, treenode *t3)
-    : treenode(t1, t2, ete, t3) {
-  parentRewrite = ((terminal *)t1)->value();
+void prog::doConversion() {
+  beforeConversion();
+  statements *ss = (statements *)getChild(1);
+  ss->doConversion();
+  convertedSection = "\n%%\n\n" + ss->productions + "%%\n";
 }
 
 void statements::doConversion() {
   beforeConversion();
+  statement *s_node = (statement *)getChild(0);
+  s_node->doConversion();
   if (numChildren == 1) {
+    productions = s_node->productions;
+  } else if (numChildren == 2) {
+    statements *ss_node = (statements *)getChild(1);
+    ss_node->doConversion();
+    productions += s_node->productions + ss_node->productions;
   }
+}
+
+statement::statement(treenode *t1, treenode *t2, treenode *ete, treenode *t3)
+    : treenode(t1, t2, ete, t3) {
+  parentRewrite = ((terminal *)t1)->value();
 }
 
 void statement::doConversion() {
@@ -47,10 +61,11 @@ void statement::doConversion() {
   ete_node->doConversion();
   productions = t1_node->value() + NAME_RULE_SPLITTER +
                 ete_node->termOrNonterm + PRODUCTION_END_SEMI;
-  while (!extraProductionVector.empty()) {
-    productions += "\n" + *extraProductionVector.end() + PRODUCTION_END_SEMI;
-    extraProductionVector.pop_back();
+  for (vector<string>::reverse_iterator it = extraProductionVector.rbegin();
+       it != extraProductionVector.rend(); it++) {
+    productions += *it + PRODUCTION_END_SEMI;
   }
+  extraProductionVector.clear();
 }
 
 void epsilon_trans_expr::doConversion() {
@@ -152,12 +167,12 @@ void quant::doConversion() {
           treenode::getNewUnTakenNonterm(parentRewrite + "_quant");
       string subProductionName =
           treenode::getNewUnTakenNonterm(productionName + "_sub");
-      string productionRule =
-          bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
       string subProductionRule =
           bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
-      insertExtraProduction(productionName, productionRule);
+      string productionRule =
+          bs_name + RULE_OR_SPLITTER + bs_name + " " + subProductionName;
       insertExtraProduction(subProductionName, subProductionRule);
+      insertExtraProduction(productionName, productionRule);
       termOrNonterm = productionName;
     } else if (t2_node->value() == "*") {
       string productionName =
