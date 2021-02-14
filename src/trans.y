@@ -8,7 +8,10 @@
 
 int yylex(); // A function that is to be generated and provided by flex,
              // which returns a next token when called repeatedly.
-int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
+int yyerror(const char *p) { 
+  std::cerr << "error: " << p << std::endl; 
+  return -1;
+};
 
 using namespace asttree;
 using namespace std;

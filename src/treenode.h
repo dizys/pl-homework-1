@@ -220,7 +220,10 @@ class terminal : public treenode {
 public:
   terminal(string v) : s(v) {}
 
-  virtual string setValue(string s1) { s = s1; }
+  virtual string setValue(string s1) {
+    s = s1;
+    return s1;
+  }
 
   virtual string value() const { return s; }
 
