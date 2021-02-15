@@ -3,7 +3,7 @@
 An EBNF-to-BNF Bison rule translator built using Flex and Bison. Actions
 are completely ignored during translation.
 
-Extended expressions:
+Supported extended expressions:
 - `<A>` or `A*`: zero or more occurrences of A
 - `A+`: one or more occurrences of A
 - `[A]`: zero or one occurrences of A

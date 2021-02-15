@@ -28,6 +28,11 @@ if [ ! -d "$dist_package_dir" ] ; then
   mkdir -p "$dist_package_dir"
 fi
 
+echo "Copying \`README.md\`...";
+cp "$scripts_dir/README.md" "$dist_package_dir/README.md"
+sed -i "s/<NET_ID>/$1/g" "$dist_package_dir/README.md"
+echo " - Finished."
+
 echo "Copying \`trans.l\`...";
 cp "$source_dir/trans.l" "$dist_package_dir/$1.trans.l"
 sed -i "s/\"treenode.h\"/\"$1.treenode.h\"/g" "$dist_package_dir/$1.trans.l"
@@ -60,6 +65,11 @@ echo " - Finished."
 echo "Copying \`tinybasic.l\`...";
 cp "$examples_dir/tinybasic.l" "$dist_package_dir/$1.tinybasic.l"
 sed -i "s/\"tinybasic.tab.h\"/\"$1.tinybasic.tab.h\"/g" "$dist_package_dir/$1.tinybasic.l"
+echo " - Finished."
+
+echo "Copying \`README.md\`...";
+cp "$scripts_dir/README.md" "$dist_package_dir/README.md"
+sed -i "s/<NET_ID>/$1/g" "$dist_package_dir/README.md"
 echo " - Finished."
 
 echo "Copying \`tinybasic.sh\`...";
