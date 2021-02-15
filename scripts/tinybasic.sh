@@ -31,7 +31,7 @@ if [ ! -f "$source_dir/$net_id.tinybasic.y" ] ; then
   echo -e "\033[31;1mError: failed to translate TinyBasic grammar from EBNF to BNF.\033[0m"
   exit
 fi
-echo " - Success."
+echo " - Success. Translated file at: $source_dir/$net_id.tinybasic.y"
 echo ""
 
 echo "Bison: generating TinyBasic parser c source file..."
