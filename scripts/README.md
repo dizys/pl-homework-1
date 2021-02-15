@@ -20,7 +20,7 @@ of a single `|`
 ```
 project
 ├─repo                          
-├─dist                          Build artifacts (created after build)
+├─<NET_ID>_dist                 Build artifacts (created after build)
 │  ├─bin                            Folder to hold generated binaries
 │  │  ├─tinybasic                       Executable binary of TinyBasic parser 
 │  │  └─trans                           Executable binary of translator
