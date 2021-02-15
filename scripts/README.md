@@ -42,6 +42,9 @@ project
 
 ## 2. Build the translator
 
+This project requires Bison 3.5+ and Flex 2.5+ to build. It's developed with 
+Bison 3.7.1 and Flex 2.6.4.
+
 To build the translator, simply run the following shell script via CLI:
 
 ```sh
