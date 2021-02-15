@@ -12,7 +12,7 @@ if [ ! -n "$1" ] ; then
   echo ""
   echo "Usage: ./package.sh NET_ID"
   echo "  e.g. \`./package.sh ab1234\`"
-  exit
+  exit 1
 fi
 
 # Clean artifacts

@@ -17,7 +17,7 @@ dist_binary_dir="$dist_dir/bin"
 
 if [ ! -f "$dist_binary_dir/trans" ] ; then
   echo -e "\033[31;1mError: cannot find binary for the translator. Please run the shell script \`make.sh\` to build the translator first.\033[0m"
-  exit
+  exit 1
 fi
 
 # Check the argument
@@ -27,7 +27,7 @@ if [ ! -f "$1" ] ; then
   echo ""
   echo "Usage: ./run.sh EXAMPLE_PATH"
   echo "  e.g. \`./run.sh ./examples/cal1.y\`"
-  exit
+  exit 1
 fi
 
 # Run the translator

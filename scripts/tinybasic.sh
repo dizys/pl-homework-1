@@ -19,6 +19,7 @@ dist_binary_dir="$dist_dir/bin"
 
 if [ -d "$dist_dir" ] ; then
   echo "Cleaning previous build artifacts..."
+  rm -f "$source_dir/$net_id.tinybasic.y"
   rm -f "$dist_c_source_dir/$net_id.tinybasic.*"
   rm -f "$dist_dir/tinybasic"
   echo " - Finished."
@@ -29,7 +30,7 @@ echo "Translating \`tinybasic.in\` from EBNF to BNF..."
 cat $source_dir/$net_id.tinybasic.in | $dist_binary_dir/trans > $source_dir/$net_id.tinybasic.y
 if [ ! -f "$source_dir/$net_id.tinybasic.y" ] ; then
   echo -e "\033[31;1mError: failed to translate TinyBasic grammar from EBNF to BNF.\033[0m"
-  exit
+  exit 1
 fi
 echo " - Success. Translated file at: $source_dir/$net_id.tinybasic.y"
 echo ""
@@ -38,7 +39,7 @@ echo "Bison: generating TinyBasic parser c source file..."
 bison -d "$source_dir/$net_id.tinybasic.y" -o "$dist_c_source_dir/$net_id.tinybasic.tab.c"
 if [ ! -f "$dist_c_source_dir/$net_id.tinybasic.tab.c" ] ; then
   echo -e "\033[31;1mError: failed to generate parser using Bison.\033[0m"
-  exit
+  exit 1
 fi
 echo " - Success. Tokenizor source at: $dist_c_source_dir/$net_id.tinybasic.tab.c"
 echo ""
@@ -47,7 +48,7 @@ echo "Flex: generating TinyBasic tokenizer c source file..."
 flex -o"$dist_c_source_dir/$net_id.tinybasic.yy.c" "$source_dir/$net_id.tinybasic.l"
 if [ ! -f "$dist_c_source_dir/$net_id.tinybasic.yy.c" ] ; then
   echo -e "\033[31;1mError: failed to generate tokenizer using Flex.\033[0m"
-  exit
+  exit 1
 fi
 echo " - Success. Parser source at: $dist_c_source_dir/$net_id.tinybasic.yy.c"
 echo ""
@@ -60,7 +61,7 @@ g++ \
   "$dist_c_source_dir/$net_id.tinybasic.tab.c"
 if [ ! -f "$dist_binary_dir/tinybasic" ] ; then
   echo -e "\033[31;1mError: failed to compile TinyBasic parser.\033[0m"
-  exit
+  exit 1
 fi
 echo " - Success. Executable binary at: $dist_binary_dir/tinybasic"
 echo ""
