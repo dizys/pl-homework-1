@@ -29,20 +29,10 @@ int section=1;
 */
 int flag=0;
 
-int countLines(const string &text) {
-  string needle="\n";
-  int nPos = text.find(needle, 0);
-  int count = 1;
-  while (nPos != string::npos)
-  {
-    count++;
-    nPos = text.find(needle, nPos + needle.size());
-  }
-  return count;
-}
 %}
 
 %option noyywrap
+%option yylineno
 
 %%
 
@@ -205,7 +195,6 @@ int countLines(const string &text) {
  /* Code block. %{ ...  %}
     Warning: possibly multiple lines!  */
 "%{"[.\n]*"%}" {
-  yylineno+=countLines(yytext)-1;
   /* discard flex code block */
   cout << yytext;
 }
@@ -213,14 +202,12 @@ int countLines(const string &text) {
 
  /* This is the %union directive. Also can span multiple lines. */
 "%union {"[^}]*"};" {
-  yylineno+=countLines(yytext)-1;
   /* discard union code block */
   cout << yytext;
 }
 
  /* Code action block of the form { .... } */
 "{"[^}]*"}" {
-  yylineno+=countLines(yytext)-1;
   /* discard action code block */
   if (section != 2) {
     cout << yytext;
@@ -228,7 +215,6 @@ int countLines(const string &text) {
 }
 
 [\n\r]+ {
-  yylineno+=countLines(yytext)-1;
   if (section!=2) {
     cout << yytext;
   }
@@ -248,7 +234,7 @@ int countLines(const string &text) {
   if (section != 2) {
     cout << yytext;
   } else {
-    cerr << "Invalid token: " << yytext <<  " on line " << yylineno << endl;
+    cerr << "Error: invalid token `" << yytext <<  "` on line " << yylineno << endl;
     exit(1);
   }
 }

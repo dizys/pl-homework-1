@@ -12,8 +12,8 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %%
 
 escape_hell: 
-    double_quoted 
-  | 
+    double_quoted
+  |
     single_quoted
   ;
 

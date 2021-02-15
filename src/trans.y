@@ -6,11 +6,13 @@
 #include <cstddef>
 #include "treenode.h"
 
+extern int yylineno;
+
 int yylex(); // A function that is to be generated and provided by flex,
              // which returns a next token when called repeatedly.
 int yyerror(const char *p) { 
-  std::cerr << "error: " << p << std::endl; 
-  return -1;
+  std::cerr << "Error: " << p << " on line " << yylineno << std::endl; 
+  return 1;
 };
 
 using namespace asttree;
@@ -27,6 +29,8 @@ using namespace std;
 %token <val> GROUPING_LEFT GROUPING_RIGHT GROUP_OR
 %token <val> RULE_OR
 %token <val> REP_ONE REP_ZERO
+
+%left TERM_OR_NONTERM
 
 %type <val> prog statements statement epsilon_trans_expr expr subexpr concat quant base term_and_nonterms
 

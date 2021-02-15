@@ -3,14 +3,13 @@
 #################################
 #  Script for Running Examples  #
 #                               #
-#        by Ziyang Zeng         #
+#    by Ziyang Zeng (zz2960)    #
 #          Feb. 2021            #
 #################################
 
 # Initialize paths
 
-shell_path=$(dirname "$0")
-shell_dir="$(basename $shell_path)"
+shell_dir=$(dirname "$0")
 dist_dir="$shell_dir/dist"
 dist_binary_dir="$dist_dir/bin"
 
