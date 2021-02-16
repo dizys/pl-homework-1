@@ -15,7 +15,8 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}
       run: |
-        echo "Bison ``"
+        bison --version
+        flex --version
         ./make.sh
 
     - name: Test
