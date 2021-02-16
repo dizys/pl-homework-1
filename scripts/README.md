@@ -19,7 +19,7 @@ of a single `|`
 
 ```
 project
-├─repo                          The complete repository for this project
+├─repo                        The complete repository for this project
 ├─<NET_ID>_dist                 Build artifacts (created after build)
 │  ├─bin                            Folder to hold generated binaries
 │  │  ├─tinybasic                       Executable binary of TinyBasic parser 
