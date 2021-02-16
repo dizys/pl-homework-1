@@ -19,7 +19,7 @@ of a single `|`
 
 ```
 project
-├─repo                          
+├─repo                          The complete repository for this project
 ├─<NET_ID>_dist                 Build artifacts (created after build)
 │  ├─bin                            Folder to hold generated binaries
 │  │  ├─tinybasic                       Executable binary of TinyBasic parser 
@@ -34,7 +34,7 @@ project
 ├─<NET_ID>.trans.l                Translator tokenizer source in Flex
 ├─<NET_ID>.trans.sh               Shell script for building translator
 ├─<NET_ID>.trans.y                Translator parser source in Bison
-├─<NET_ID>.treenode.cpp           AST tree node source in C++
+├─<NET_ID>.treenode.cpp           AST treenode source in C++
 ├─<NET_ID>.treenode.h             treenode header file
 │
 ...
@@ -74,7 +74,7 @@ Finally, it will run `g++` to compile the generated C source files and output an
 executable binary file for the TinyBasic parser at the path 
 `<NET_ID>_dist/bin/tinybasic`.
 
-## 4. Limitations for the translator
+## 4. Limitations of the translator
 
 ### 4.1 Actions are ignored
 
@@ -89,7 +89,7 @@ Because it's impossible to represent the recursive structure of nested
 blocks using a single standard regular expression, action block with only
 one level of matching curly brackets can be matched by the regular
 expression. A possible solution would be further defining C/C++ tokens and
-grammar structure in Flex and Bison. But that would be out of topic for
+grammar structure in Flex and Bison. But that would be out of scope for
 this project.
 
 For example, the following file would throw an error when being translated.

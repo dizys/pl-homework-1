@@ -33,7 +33,7 @@ project
 ├─src                           Translater source folder
 │  ├─trans.l                        Tokenizer source in Flex
 │  ├─trans.y                        Parser source in Bison
-│  ├─treenode.cpp                   AST tree node source in C++
+│  ├─treenode.cpp                   AST treenode source in C++
 │  └─treenode.h                     treenode header file
 │
 ├─load_modules.sh               Shell script for fast loading Flex and Bison
@@ -139,7 +139,7 @@ Because it's impossible to represent the recursive structure of nested
 blocks using a single standard regular expression, action block with only
 one level of matching curly brackets can be matched by the regular
 expression. A possible solution would be further defining C/C++ tokens and
-grammar structure in Flex and Bison. But that would be out of topic for
+grammar structure in Flex and Bison. But that would be out of scope for
 this project.
 
 For example, the following file would throw an error when being translated.
