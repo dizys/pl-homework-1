@@ -1,0 +1,47 @@
+name: Package
+
+on: [push]
+
+env:
+  NET_ID: ${{ secrets.NET_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: |
+        echo "Bison ``"
+        ./make.sh
+
+    - name: Test
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: |
+        ./run.sh examples/calc1.y
+        ./run.sh examples/calc2.y
+        ./run.sh examples/test1.y
+        ./run.sh examples/test2.y
+        ./run.sh examples/test4.y
+        ./run.sh examples/tinybasic.in
+
+    - name: Package
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: |
+        ./package.sh "$NET_ID"
+        (cd dist/package; zip -r ../../package.zip .)
+
+    - name: Release
+      uses: softprops/action-gh-release@v0.1.5
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: 
+          package.zip
