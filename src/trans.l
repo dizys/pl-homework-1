@@ -1,4 +1,9 @@
 %{
+/* Translator Tokenizer Source in Flex
+ * 
+ * by Ziyang Zeng (zz2960)
+ * Feb. 2021
+ */
 #include <iostream>
 #include <stdlib.h>
 #include <vector>

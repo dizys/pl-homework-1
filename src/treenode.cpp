@@ -1,3 +1,8 @@
+/* AST Treenode Source in C++
+ *
+ * by Ziyang Zeng (zz2960)
+ * Feb. 2021
+ */
 #include "treenode.h"
 #include <iostream>
 #include <set>

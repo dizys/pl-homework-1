@@ -1,3 +1,8 @@
+/* AST Treenode Header File
+ *
+ * by Ziyang Zeng (zz2960)
+ * Feb. 2021
+ */
 #ifndef TREENODE_H
 #define TREENODE_H
 

@@ -1,5 +1,15 @@
 #!/bin/sh
 
+#################################
+#  Flex and Bison build script  #
+#                               #
+#    by Ziyang Zeng (zz2960)    #
+#           Feb. 2021           #
+#################################
+
+
+# Initialize paths
+
 shell_dir=$(dirname "$0")
 source_dir="$shell_dir/src"
 scripts_dir="$shell_dir/scripts"
@@ -15,6 +25,7 @@ if [ ! -n "$1" ] ; then
   exit 1
 fi
 
+
 # Clean artifacts
 
 if [ -d "$dist_package_dir" ] ; then
@@ -24,9 +35,15 @@ if [ -d "$dist_package_dir" ] ; then
   echo ""
 fi
 
+
+# Create package directory
+
 if [ ! -d "$dist_package_dir" ] ; then
   mkdir -p "$dist_package_dir"
 fi
+
+
+# Copy files to package directory
 
 echo "Copying \`README.md\`...";
 cp "$scripts_dir/README.md" "$dist_package_dir/README.md"
@@ -76,6 +93,7 @@ echo "Copying \`tinybasic.sh\`...";
 cp "$scripts_dir/tinybasic.sh" "$dist_package_dir/$1.tinybasic.sh"
 sed -i "s/\"<NET_ID>\"/\"$1\"/g" "$dist_package_dir/$1.tinybasic.sh"
 echo " - Finished."
+
 
 echo ""
 echo "Package task done."

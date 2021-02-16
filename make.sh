@@ -27,7 +27,7 @@ if [ -d "$dist_dir" ] ; then
 fi
 
 
-# Setup and build
+# Create dist directories
 
 if [ ! -d "$dist_c_source_dir" ] ; then
   mkdir -p "$dist_c_source_dir"
@@ -36,6 +36,9 @@ fi
 if [ ! -d "$dist_binary_dir" ] ; then
   mkdir -p "$dist_binary_dir"
 fi
+
+
+# Build
 
 echo "Bison: generating parser c source file..."
 bison -d "$source_dir/trans.y" -o "$dist_c_source_dir/trans.tab.c"

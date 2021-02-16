@@ -35,7 +35,7 @@ project
 ├─<NET_ID>.trans.sh               Shell script for building translator
 ├─<NET_ID>.trans.y                Translator parser source in Bison
 ├─<NET_ID>.treenode.cpp           AST treenode source in C++
-├─<NET_ID>.treenode.h             treenode header file
+├─<NET_ID>.treenode.h             AST treenode header file
 │
 ...
 ```

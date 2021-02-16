@@ -34,7 +34,7 @@ project
 │  ├─trans.l                        Tokenizer source in Flex
 │  ├─trans.y                        Parser source in Bison
 │  ├─treenode.cpp                   AST treenode source in C++
-│  └─treenode.h                     treenode header file
+│  └─treenode.h                     AST treenode header file
 │
 ├─load_modules.sh               Shell script for fast loading Flex and Bison
 ├─make.sh                       Shell script for easily building the translator

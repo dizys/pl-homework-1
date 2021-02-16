@@ -1,4 +1,9 @@
 %{
+/* Translator Parser Source in Bison
+ * 
+ * by Ziyang Zeng (zz2960)
+ * Feb. 2021
+ */
 #include <iostream>
 #include <vector>
 #include <stdio.h>

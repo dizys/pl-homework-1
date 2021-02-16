@@ -9,11 +9,15 @@
 
 net_id="<NET_ID>"
 
+
+# Initialize paths
+
 shell_dir=$(dirname "$0")
 source_dir="$shell_dir"
 dist_dir="$shell_dir/${net_id}_dist"
 dist_c_source_dir="$dist_dir/c_src"
 dist_binary_dir="$dist_dir/bin"
+
 
 # Clean artifacts
 
@@ -24,6 +28,7 @@ if [ -d "$dist_dir" ] ; then
   echo ""
 fi
 
+
 # Create dist directories
 
 if [ ! -d "$dist_c_source_dir" ] ; then
@@ -33,6 +38,9 @@ fi
 if [ ! -d "$dist_binary_dir" ] ; then
   mkdir -p "$dist_binary_dir"
 fi
+
+
+# Build
 
 echo "Bison: generating parser c source file..."
 bison -d "$source_dir/$net_id.trans.y" -o "$dist_c_source_dir/$net_id.trans.tab.c"
@@ -66,5 +74,6 @@ if [ ! -f "$dist_binary_dir/trans" ] ; then
 fi
 echo " - Success. Executable binary at: $dist_binary_dir/trans"
 echo ""
+
 
 echo "Trans build task done."
