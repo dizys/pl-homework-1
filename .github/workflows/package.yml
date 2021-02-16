@@ -21,8 +21,8 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}
       run: |
-        ./run.sh examples/calc1.y
-        ./run.sh examples/calc2.y
+        ./run.sh examples/cal1.y
+        ./run.sh examples/cal2.y
         ./run.sh examples/test1.y
         ./run.sh examples/test2.y
         ./run.sh examples/test4.y
